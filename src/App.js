@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter, Switch, Route, Link } from 'react-router-dom'
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import * as BooksAPI from './utils/BooksAPI'
 import './App.css'
 
@@ -7,6 +7,17 @@ import Search from './components/Search'
 import ListBooks from './components/ListBooks'
 
 class BooksApp extends React.Component {
+	state = {
+		books: [],
+		bookResults: []
+	}
+
+	componentDidMount() {
+		BooksAPI.getAll().then((books) => {
+			this.setState({books})
+		})
+	}
+
   render() {
     return (
       <div className="app">
@@ -23,7 +34,9 @@ class BooksApp extends React.Component {
 							</div>
 							)}/>
 						<Route path="/search" render={() => (
-							<Search />
+							<Search
+								books={this.state.books}
+							/>
 						)}/>
 					</Switch>
 				</BrowserRouter>
