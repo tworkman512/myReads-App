@@ -2,8 +2,7 @@ import React from 'react'
 import { BrowserRouter, Switch, Route, Link } from 'react-router-dom'
 import Header from './components/Header'
 import BookShelf from './components/BookShelf'
-import Search from './components/Search'
-// import ListBooks from './components/ListBooks'
+import BookSearch from './components/BookSearch'
 
 import * as BooksAPI from './utils/BooksAPI'
 import './App.css'
@@ -29,6 +28,14 @@ class BooksApp extends React.Component {
 	updateBook = (book, shelf) => {
 		BooksAPI.update(book, shelf).then(res => {
 			this.getAllBooks()
+		})
+	}
+
+	searchSomeBooks = (query, maxResults) => {
+		query.length > 0 && BooksAPI.search(query, maxResults).then(bookSearch => {
+			// don't display book results if nothing is available
+			// otherwise show book results in library
+			bookSearch === undefined ? (this.setState({bookResults: []})) : (this.setState({bookResults: bookSearch}))
 		})
 	}
 
@@ -64,7 +71,12 @@ class BooksApp extends React.Component {
 							</div>
 							)}/>
 						<Route path="/search" render={() => (
-							<Search />
+							<BookSearch
+								books={books}
+								bookResults={bookResults}
+								updateBook={this.updateBook}
+								searchSomeBooks={this.searchSomeBooks}
+							/>
 						)}/>
 					</Switch>
 				</BrowserRouter>
