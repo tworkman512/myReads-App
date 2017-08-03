@@ -6,9 +6,13 @@ class Book extends Component {
 			<li>
 				<div className="book">
 					<div className="book-top">
-						<img className="book-cover" style={{ width: 128, height: 193 }} src={this.props.book.imageLinks.thumbnail}></img>
+						<img className="book-cover"
+							style={{ width: 128, height: 193 }}
+							src={this.props.book.imageLinks.thumbnail}>
+						</img>
 						<div className="book-shelf-changer">
-							<select>
+							<select defaultValue={this.props.book.shelf}
+								onChange={(event) => this.props.updateBook(this.props.book, event.target.value)}>
 								<option value="none" disabled>Move to...</option>
 								<option value="currentlyReading">Currently Reading</option>
 								<option value="wantToRead">Want to Read</option>
