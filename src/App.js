@@ -32,10 +32,26 @@ class BooksApp extends React.Component {
 	}
 
 	searchSomeBooks = (query, maxResults) => {
-		query.length > 0 && BooksAPI.search(query, maxResults).then(bookSearch => {
+		// if nothing is searched then remove the book thumbnails
+		query.length === 0 && this.setState({bookResults: []})
+
+		query.length > 0 && BooksAPI.search(query, maxResults).then(bookSearched => {
+			if(!bookSearched.error){
+				bookSearched.map((bookSearch) => {
+					let unmatched = this.state.books.filter(book => book.id !== bookSearch.id)
+					let match = this.state.books.filter(book => book.id === bookSearch.id)
+					if(match.length > 0){
+						return bookSearch.shelf = match[0].shelf
+					}
+					if(unmatched.length > 0){
+						return bookSearch.shelf = 'none'
+					}
+				})
+			}
+
 			// don't display book results if nothing is available
 			// otherwise show book results in library
-			bookSearch === undefined ? (this.setState({bookResults: []})) : (this.setState({bookResults: bookSearch}))
+			bookSearched.error || bookSearched === undefined ? (this.setState({bookResults: []})) : (this.setState({bookResults: bookSearched}))
 		})
 	}
 
