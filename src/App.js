@@ -36,14 +36,16 @@ class BooksApp extends React.Component {
 		query.length === 0 && this.setState({bookResults: []})
 
 		query.length > 0 && BooksAPI.search(query, maxResults).then(bookSearched => {
-			if(!bookSearched.error){
+			if (!bookSearched.error) {
 				bookSearched.map((bookSearch) => {
+
 					let unmatched = this.state.books.filter(book => book.id !== bookSearch.id)
 					let match = this.state.books.filter(book => book.id === bookSearch.id)
-					if(match.length > 0){
+
+					if (match.length > 0) {
 						return bookSearch.shelf = match[0].shelf
 					}
-					if(unmatched.length > 0){
+					if (unmatched.length > 0) {
 						return bookSearch.shelf = 'none'
 					}
 				})
